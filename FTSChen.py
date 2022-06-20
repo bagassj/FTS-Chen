@@ -232,6 +232,7 @@ lstNextPredict[0] = nextPredict
 final = pd.DataFrame(zip(a, b, diff, lstFuzzyfy, lstFLR, lstForecast, lstDiffForecast, lstDiffForecast2, lstSumDiffForecast, lstNextPredict, lstMape, lstDMax, lstDMin, lstDiffAmount, lstMeanDiff, lstIntervalLength, lstNumClass), columns=['Tahun', 'Produksi', 'Selisih', 'Fuzzyfikasi', 'FLR', 'Nilai Ramalan', 'Selisih Forecasting', 'Selisih Final Forecasting', 'Jumlah Selisih Final Forecasting', 'Ramalan Selanjutnya', 'MAPE', 'Produksi Terbesar', 'Produksi Terkecil', 'Jumlah Selisih Produksi', 'Mean Selisih Produksi', 'Panjang Interval', 'Jumlah Kelas Interval'])
 print(final)
 dfFLRG = pd.DataFrame(lstFLRG, columns=['Current State', 'Next State', 'Hasil Peramalan'])
+final[' '] = [' ']*len(b)
 final['Current State'] = dfFLRG['Current State']
 final['Next State'] = dfFLRG['Next State']
 final['Hasil Peramalan'] = dfFLRG['Hasil Peramalan']
