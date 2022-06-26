@@ -7,10 +7,10 @@ b = df['Produksi(Ton)'].tolist()
 #Penentuan dMax, dMin, d1, d2, u
 dMax = max(b)
 dMin = min(b)
-# d1 = 20287
-# d2 = 1640
-d1 = int(input('Masukkan d1: '))
-d2 = int(input('Masukkan d2: '))
+d1 = 20287
+d2 = 1640
+# d1 = int(input('Masukkan d1: '))
+# d2 = int(input('Masukkan d2: '))
 u = [dMin-d2, dMax+d1] 
 
 def setDifference(b):
@@ -147,6 +147,11 @@ def NextPredict(num, lstTempFLRG):
     if num in i[1]:
       return i[2]
 
+def showToConsole(final):
+  final = final.loc[ : , final.columns != 'Fuzzyfikasi']
+  final = final.loc[ : , final.columns != 'FLR']
+  return final
+
 def intervalRound(num):
   if num > 0 and num <= 1:
     return round(num, 1)
@@ -188,13 +193,17 @@ lstNumClass[0] = numClass
 
 # Membuat tabel interval
 listIntervalTable = intervalTable(u[0], intervalLength, numClass)
+# print(listIntervalTable)
+dfIntervalTable = pd.DataFrame(listIntervalTable)
 
 # Fuzzyfikasi
 lstFuzzyfy = fuzzyfy(listIntervalTable ,b)
+dfFuzzyfy = pd.DataFrame(lstFuzzyfy, columns = ["Fuzzyfikasi"])
 
 # Menentukan FLR
 tempFLR = flr(lstFuzzyfy)
 lstFLR = convertFLR(tempFLR)
+dfFLR = pd.DataFrame(lstFLR, columns = ["FLR"])
 
 # Menentukan FLRG
 lstFLRG, lstTempFLRG = flrg(listIntervalTable,tempFLR)
@@ -230,15 +239,25 @@ lstNextPredict = [' ']*len(b)
 lstNextPredict[0] = nextPredict
 
 final = pd.DataFrame(zip(a, b, diff, lstFuzzyfy, lstFLR, lstForecast, lstDiffForecast, lstDiffForecast2, lstSumDiffForecast, lstNextPredict, lstMape, lstDMax, lstDMin, lstDiffAmount, lstMeanDiff, lstIntervalLength, lstNumClass), columns=['Tahun', 'Produksi', 'Selisih', 'Fuzzyfikasi', 'FLR', 'Nilai Ramalan', 'Selisih Forecasting', 'Selisih Final Forecasting', 'Jumlah Selisih Final Forecasting', 'Ramalan Selanjutnya', 'MAPE', 'Produksi Terbesar', 'Produksi Terkecil', 'Jumlah Selisih Produksi', 'Mean Selisih Produksi', 'Panjang Interval', 'Jumlah Kelas Interval'])
-print(final)
+
+print(showToConsole(final))
+print()
+print(pd.concat([pd.DataFrame(a), dfFuzzyfy, dfFLR], axis = 1))
+# print(final)
 dfFLRG = pd.DataFrame(lstFLRG, columns=['Current State', 'Next State', 'Hasil Peramalan'])
 final[' '] = [' ']*len(b)
 final['Current State'] = dfFLRG['Current State']
 final['Next State'] = dfFLRG['Next State']
 final['Hasil Peramalan'] = dfFLRG['Hasil Peramalan']
+final['  '] = [' ']*len(b)
+final['Minimum'] = dfIntervalTable[0]
+
+final['Kelas'] = dfIntervalTable[1]
+
+final['Maksimum'] = dfIntervalTable[2]
+
+final['Median'] = dfIntervalTable[3]
+
 
 # write DataFrame to excel
-final.to_excel('result.xlsx')
-
-
-print('DataFrame is written to Excel File successfully.')
+final.to_excel('result.xlsx') 
