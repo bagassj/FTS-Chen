@@ -7,10 +7,10 @@ b = df['Produksi(Ton)'].tolist()
 #Penentuan dMax, dMin, d1, d2, u
 dMax = max(b)
 dMin = min(b)
-d1 = 20287
-d2 = 1640
-# d1 = int(input('Masukkan d1: '))
-# d2 = int(input('Masukkan d2: '))
+# d1 = 20287
+# d2 = 1640
+d1 = int(input('Masukkan d1: '))
+d2 = int(input('Masukkan d2: '))
 u = [dMin-d2, dMax+d1] 
 
 def setDifference(b):
